@@ -1,0 +1,12 @@
+name: dashboardWEOShiny
+title: dashboardWEOShiny
+username:
+account: henriquefb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3921577
+bundleId: 4440386
+url: https://henriquefb.shinyapps.io/dashboardWEOShiny/
+when: 1617772525.96646
+asMultiple: FALSE
+asStatic: FALSE

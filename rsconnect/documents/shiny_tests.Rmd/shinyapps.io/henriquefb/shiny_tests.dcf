@@ -1,0 +1,12 @@
+name: shiny_tests
+title: shiny_tests
+username:
+account: henriquefb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3921359
+bundleId: 4440254
+url: https://henriquefb.shinyapps.io/shiny_tests/
+when: 1617768693.66461
+asMultiple: FALSE
+asStatic: FALSE
