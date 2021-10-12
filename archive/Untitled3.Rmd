@@ -1,0 +1,35 @@
+---
+title: "Old Faithful Eruptions"
+output: flexdashboard::flex_dashboard
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
+source("/Users/henrique/Desktop/weoapp/visualizingWEOv2.R")
+```
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+
+Waiting time between eruptions and the duration of the eruption for the
+Old Faithful geyser in Yellowstone National Park, Wyoming, USA.
+
+```{r}
+selectInput("ctry", label = "Country: ",
+            choices = c("Norway", "Sweden"), selected = "Norway")
+
+```
+
+Column
+-----------------------------------------------------------------------
+
+### Geyser Eruption Duration
+
+```{r}
+renderPlot({
+  full_weo %>% 
+    filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>% 
+    ggplot(aes(y=LUR, x=year, fill=Version)) + geom_bar(position="dodge", stat="identity")
+)}
+```

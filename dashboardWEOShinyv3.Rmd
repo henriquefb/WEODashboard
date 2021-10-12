@@ -11,11 +11,11 @@ runtime: shiny
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
-load("Data/WEOpanelApr2021.Rdata")
+load("Data/WEOpanelOct2021.Rdata")
 load("Data/WEOcodebook.Rdata")
 full_weo$Version <- as.factor(full_weo$Version)
 full_weo <- full_weo %>% 
-  mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021")))
+  mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021", "oct2021")))
 countries <- unique(full_weo$Country)
 years <- unique(full_weo$year)
 vintages <- unique(full_weo$Version)
@@ -28,7 +28,7 @@ Single Country
 Column {.sidebar data-width=200}
 -----------------------------------------------------------------------
 
-This visualization compares the October 2019, October 2020 and April 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
+This visualization compares the October 2019 to October 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
 \n Author: Henrique Barbosa
 
 
@@ -122,7 +122,7 @@ Cross-Country
 Column {.sidebar data-width=200}
 -----------------------------------------------------------------------
 
-This visualization compares the October 2019, October 2020 and April 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
+This visualization compares the October 2019 to October 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
 \n Author: Henrique Barbosa
 
 

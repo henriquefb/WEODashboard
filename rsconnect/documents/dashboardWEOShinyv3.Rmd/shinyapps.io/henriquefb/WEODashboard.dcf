@@ -5,8 +5,8 @@ account: henriquefb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3922766
-bundleId: 4441876
+bundleId: 5130768
 url: https://henriquefb.shinyapps.io/WEODashboard/
-when: 1617800601.74214
+when: 1634045274.10098
 asMultiple: FALSE
 asStatic: FALSE

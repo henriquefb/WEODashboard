@@ -1,0 +1,132 @@
+---
+title: "IMF World Economic Outlook Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+load("Data/WEOpanelApr2021.Rdata")
+full_weo$Version <- as.factor(full_weo$Version)
+full_weo <- full_weo %>% 
+  mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021")))
+countries <- unique(full_weo$Country)
+```
+
+Column {.sidebar data-width=200}
+-----------------------------------------------------------------------
+
+This visualization compares the October 2019, October 2020 and April 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
+\n Author: Henrique Barbosa
+
+```{r}
+selectInput("ctry", label = "Country",
+            choices = countries, selected = "Brazil")
+
+```
+
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Unemployment Rate (%)
+
+
+
+```{r}
+
+renderPlot({
+  
+  full_weo %>% 
+    filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>%
+    ggplot(aes(y=LUR, x=year, fill=Version)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_text(aes(label=LUR), vjust=-0.3, color="black",
+                                              position = position_dodge(0.9), size=3) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    guides(fill=guide_legend(title="WEO Vintage"))
+    
+})
+```
+
+### General Government Gross Debt (% of GDP)
+
+
+```{r}
+renderPlot({
+  full_weo %>% filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>% 
+    ggplot(aes(y=GGXWDG_NGDP, x=year, fill=Version)) + 
+    geom_bar(position="dodge", stat="identity") +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+        geom_text(aes(label=GGXWDG_NGDP), vjust=-0.3, color="black",
+                                              position = position_dodge(0.9), size=3) +
+    coord_cartesian(ylim=c(20,NA)) +
+    guides(fill=guide_legend(title="WEO Vintage"))
+
+})
+```
+
+Column {data-width=400}
+-----------------------------------------------------------------------
+
+### Real GDP growth (%)
+
+```{r}
+renderPlot({
+full_weo %>% filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>% 
+    ggplot(aes(y=NGDP_RPCH, x=year, fill=Version)) + 
+    geom_bar(position="dodge", stat="identity") +
+    geom_text(aes(label=NGDP_RPCH), vjust=-0.3, color="black",
+                                              position = position_dodge(0.9), size=3) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    guides(fill=guide_legend(title="WEO Vintage"))
+})
+```
+
+### Nominal GDP path
+
+```{r}
+renderPlot({
+full_weo %>%
+  filter(Country == as.character(input$ctry) & year>2010 & year < 2024) %>% 
+    ggplot(aes(x=year, y=NGDP_R, group=Version, color = Version)) + 
+    geom_line() +
+    geom_path(size=1) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    guides(fill=guide_legend(title="WEO Vintage")) 
+})
+```
+
+==================
+
+Column {.sidebar data-width=200}
+-----------------------------------------------------------------------
+
+Testando
+
+```{r}
+selectInput("ctry1", label = "Country",
+            choices = countries, selected = "Brazil")
+
+```
+
+
+Column {data-width=800}
+-----------------------------------------------------------------------
+```{r}
+renderPlot({
+  full_weo %>% filter(Country == as.character(input$ctry1) & year>2018 & year < 2024) %>% 
+    ggplot(aes(y=GGXWDG_NGDP, x=year, fill=Version)) + 
+    geom_bar(position="dodge", stat="identity") +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+        geom_text(aes(label=GGXWDG_NGDP), vjust=-0.3, color="black",
+                                              position = position_dodge(0.9), size=3) +
+    coord_cartesian(ylim=c(20,NA)) +
+    guides(fill=guide_legend(title="WEO Vintage"))
+
+})
+```

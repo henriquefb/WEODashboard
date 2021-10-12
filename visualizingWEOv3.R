@@ -4,6 +4,7 @@ oct2019 <- read.csv("Data/WEOOct2019all.csv", stringsAsFactors=FALSE)
 apr2020 <- read.csv("Data/WEOApr2020all.csv", stringsAsFactors=FALSE)
 oct2020 <- read.csv("Data/WEOOct2020all.csv", stringsAsFactors=FALSE)
 apr2021 <- read.csv("Data/WEOApr2021all.csv", stringsAsFactors=FALSE)
+oct2021 <- read.csv("Data/WEOOct2021all.csv", stringsAsFactors=FALSE)
 
 reshapingWEO <- function(weo) {
   weo$Version <- as.character(deparse(substitute(weo)))
@@ -33,14 +34,16 @@ oct2019_r <- reshapingWEO(oct2019)
 apr2020_r <- reshapingWEO(apr2020)
 oct2020_r <- reshapingWEO(oct2020)
 apr2021_r <- reshapingWEO(apr2021)
+oct2021_r <- reshapingWEO(oct2021)
 
 
 full_weo <- rbind(oct2019_r, oct2020_r)
 full_weo <- rbind(full_weo, apr2021_r)
+full_weo <- rbind(full_weo, oct2021_r)
 
-write.csv(full_weo, file="Data/WEOpanelApr2021.csv")
+write.csv(full_weo, file="Data/WEOpanelOct2021.csv")
 
-save(full_weo, file="Data/WEOpanelApr2021.Rdata")
+save(full_weo, file="Data/WEOpanelOct2021.Rdata")
 
 code_book <- apr2021 %>% select(WEO.Subject.Code, Subject.Descriptor, Subject.Notes, Units, Scale) %>% distinct()
 save(code_book, file="Data/WEOcodebook.Rdata")
