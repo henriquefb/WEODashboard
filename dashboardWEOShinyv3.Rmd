@@ -17,7 +17,7 @@ full_weo$Version <- as.factor(full_weo$Version)
 full_weo <- full_weo %>% 
   mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021", "oct2021")))
 countries <- unique(full_weo$Country)
-years <- unique(full_weo$year)
+years <- unique(full_weo$year)[order(unique(full_weo$year))]
 vintages <- unique(full_weo$Version)
 variables <- unique(code_book$WEO.Subject.Code)
 ```
@@ -73,7 +73,7 @@ renderPlot({
 
 ```{r}
 renderPlot({
-  full_weo %>% filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>% 
+  full_weo %>% filter(Country == as.character(input$ctry) & year>=(input$year1) & year <= (input$year2)) %>% 
     ggplot(aes(y=GGXWDG_NGDP, x=year, fill=Version)) + 
     geom_bar(position="dodge", stat="identity") +
     theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
@@ -92,7 +92,7 @@ Column {data-width=400}
 
 ```{r}
 renderPlot({
-full_weo %>% filter(Country == as.character(input$ctry) & year>2018 & year < 2024) %>% 
+full_weo %>% filter(Country == as.character(input$ctry) & year>=(input$year1) & year <= (input$year2)) %>% 
     ggplot(aes(y=NGDP_RPCH, x=year, fill=Version)) + 
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label=NGDP_RPCH), vjust=-0.3, color="black",
@@ -107,7 +107,7 @@ full_weo %>% filter(Country == as.character(input$ctry) & year>2018 & year < 202
 ```{r}
 renderPlot({
 full_weo %>%
-  filter(Country == as.character(input$ctry) & year>2010 & year < 2024) %>% 
+  filter(Country == as.character(input$ctry) & year>=(input$year1) & year <= (input$year2)) %>% 
     ggplot(aes(x=year, y=NGDP_R, group=Version, color = Version)) + 
     geom_line() +
     geom_path(size=1) +
