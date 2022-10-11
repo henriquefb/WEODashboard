@@ -11,11 +11,14 @@ runtime: shiny
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
-load("Data/WEOpanelOct2021.Rdata")
+load("Data/WEOpanelOct2022.Rdata")
 load("Data/WEOcodebook.Rdata")
 full_weo$Version <- as.factor(full_weo$Version)
 full_weo <- full_weo %>% 
-  mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021", "oct2021")))
+  mutate(Version = factor(Version, levels=c("oct2019", "oct2020", "apr2021", "oct2021", "apr2022", "oct2022")))
+full_weo <- full_weo %>%
+  filter(Version %in% c("oct2019", "oct2020", "oct2021", "apr2022", "oct2022"))
+
 countries <- unique(full_weo$Country)
 years <- unique(full_weo$year)[order(unique(full_weo$year))]
 vintages <- unique(full_weo$Version)
@@ -28,8 +31,11 @@ Single Country
 Column {.sidebar data-width=200}
 -----------------------------------------------------------------------
 
-This visualization compares the October 2019 to October 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
-\n Author: Henrique Barbosa
+This visualization compares the October 2019 to October 2022 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
+<br><br> Author:
+<br> Henrique Barbosa
+<br><br> Contact:
+<br> henriquefb at icloud com
 
 
 ```{r}
@@ -37,10 +43,10 @@ selectInput("ctry", label = "Country: ",
             choices = countries, selected = "Brazil")
 
 selectInput("year1", label = "From: ",
-            choices = years, selected = 2019)
+            choices = years, selected = 2021)
 
 selectInput("year2", label = "To: ",
-            choices = years, selected = 2023)
+            choices = years, selected = 2024)
 
 ```
 
@@ -48,7 +54,7 @@ selectInput("year2", label = "To: ",
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Unemployment Rate (%)
+### Fiscal Balance (% of GDP)
 
 
 
@@ -58,11 +64,12 @@ renderPlot({
   
   full_weo %>% 
     filter(Country == as.character(input$ctry) & year>=(input$year1) & year <= (input$year2)) %>%
-    ggplot(aes(y=LUR, x=year, fill=Version)) + 
+    ggplot(aes(y=GGXCNL_NGDP, x=year, fill=Version)) + 
     geom_bar(position="dodge", stat="identity") +
-    geom_text(aes(label=LUR), vjust=-0.3, color="black",
+    geom_text(aes(label=GGXCNL_NGDP), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
     guides(fill=guide_legend(title="WEO Vintage"))
     
 })
@@ -76,7 +83,8 @@ renderPlot({
   full_weo %>% filter(Country == as.character(input$ctry) & year>=(input$year1) & year <= (input$year2)) %>% 
     ggplot(aes(y=GGXWDG_NGDP, x=year, fill=Version)) + 
     geom_bar(position="dodge", stat="identity") +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
         geom_text(aes(label=GGXWDG_NGDP), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
     coord_cartesian(ylim=c(20,NA)) +
@@ -97,7 +105,8 @@ full_weo %>% filter(Country == as.character(input$ctry) & year>=(input$year1) & 
     geom_bar(position="dodge", stat="identity") +
     geom_text(aes(label=NGDP_RPCH), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
     guides(fill=guide_legend(title="WEO Vintage"))
 })
 ```
@@ -111,7 +120,8 @@ full_weo %>%
     ggplot(aes(x=year, y=NGDP_R, group=Version, color = Version)) + 
     geom_line() +
     geom_path(size=1) +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
     guides(fill=guide_legend(title="WEO Vintage")) 
 })
 ```
@@ -122,13 +132,16 @@ Cross-Country
 Column {.sidebar data-width=200}
 -----------------------------------------------------------------------
 
-This visualization compares the October 2019 to October 2021 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
-\n Author: Henrique Barbosa
+This visualization compares the October 2019 to October 2022 vintages of the World Economic Outlook data and forecasts, published by the IMF. 
+<br><br> Author:
+<br> Henrique Barbosa
+<br><br> Contact:
+<br> henriquefb at icloud com
 
 
 ```{r}
 selectInput("weovintage", label = "WEO Vintage: ",
-            choices = vintages, selected = "apr2021")
+            choices = vintages, selected = "apr2022")
 
 selectInput("ctry1", label = "Country 1: ",
             choices = countries, selected = "Brazil")
@@ -140,7 +153,7 @@ selectInput("ctry3", label = "Country 3: ",
             choices = countries, selected = "Mexico")
 
 selectInput("year3", label = "From: ",
-            choices = years, selected = 2019)
+            choices = years, selected = 2021)
 
 selectInput("year4", label = "To: ",
             choices = years, selected = 2024)
@@ -151,16 +164,17 @@ selectInput("year4", label = "To: ",
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Unemployment (%)
+### Fiscal Balance (% of GDP)
 ```{r}
 renderPlot({
   full_weo %>% filter(Country %in% as.character(c(input$ctry1, input$ctry2, input$ctry3)) 
                       & year>=(input$year3) & year <= (input$year4)
                       & Version==as.character(input$weovintage)) %>% 
-    ggplot(aes(y=LUR, x=year, fill=Country)) + 
+    ggplot(aes(y=GGXCNL_NGDP, x=year, fill=Country)) + 
     geom_bar(position="dodge", stat="identity") +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
-        geom_text(aes(label=LUR), vjust=-0.3, color="black",
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
+        geom_text(aes(label=GGXCNL_NGDP), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
     guides(fill=guide_legend(title="Country"))
 
@@ -175,7 +189,8 @@ renderPlot({
                       & Version==as.character(input$weovintage)) %>%  
     ggplot(aes(y=GGXWDG_NGDP, x=year, fill=Country)) + 
     geom_bar(position="dodge", stat="identity") +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
         geom_text(aes(label=GGXWDG_NGDP), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
     coord_cartesian(ylim=c(20,NA)) +
@@ -195,7 +210,8 @@ renderPlot({
                       & Version==as.character(input$weovintage)) %>% 
     ggplot(aes(y=NGDP_RPCH, x=year, fill=Country)) + 
     geom_bar(position="dodge", stat="identity") +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
         geom_text(aes(label=NGDP_RPCH), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
     guides(fill=guide_legend(title="Country"))
@@ -211,7 +227,8 @@ renderPlot({
                       & Version==as.character(input$weovintage)) %>% 
     ggplot(aes(y=BCA_NGDPD, x=year, fill=Country)) + 
     geom_bar(position="dodge", stat="identity") +
-    theme(axis.title.x=element_blank(), axis.title.y=element_blank()) +
+    theme(axis.title.x=element_blank(), axis.title.y=element_blank(),
+          legend.position="top", legend.text=element_text(size=10)) +
         geom_text(aes(label=BCA_NGDPD), vjust=-0.3, color="black",
                                               position = position_dodge(0.9), size=3) +
     guides(fill=guide_legend(title="Country"))
